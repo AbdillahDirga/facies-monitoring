@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment secrets
+.env
+
+# Docker volumes/data (jangan commit data runtime)
+mosquitto/data/*
+mosquitto/log/*
+!mosquitto/data/.gitkeep
+!mosquitto/log/.gitkeep
+
+# Data mentah besar (opsional, sesuaikan kalau dataset mau ikut di-commit)
+data/raw/*
+!data/raw/.gitkeep
+
+# OS / editor
+.DS_Store
+.vscode/
