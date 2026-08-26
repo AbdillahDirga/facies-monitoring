@@ -13,9 +13,9 @@ mosquitto/log/*
 !mosquitto/data/.gitkeep
 !mosquitto/log/.gitkeep
 
-# Data mentah besar (opsional, sesuaikan kalau dataset mau ikut di-commit)
-data/raw/*
-!data/raw/.gitkeep
+# Replayer checkpoint state (runtime progress, beda tiap kali dijalankan)
+scripts/checkpoints/*
+!scripts/checkpoints/.gitkeep
 
 # OS / editor
 .DS_Store
