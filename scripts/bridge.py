@@ -1,22 +1,3 @@
-"""
-MQTT-to-Kafka bridge.
-
-Subscribes to every per-well MQTT topic (facies/welllog/<WELL_NAME>) and
-republishes each message, unchanged, to a single Kafka topic
-(facies-welllog). The well name is used as the Kafka message key, which
-Kafka uses to consistently route messages from the same well to the same
-partition.
-
-This bridge sits between two different messaging philosophies:
-- MQTT: lightweight, many small topics, built for simple pub/sub (IoT-style)
-- Kafka: fewer topics, partitioned internally, built for durable,
-  high-throughput stream processing
-
-Usage:
-    python bridge.py
-    python bridge.py --mqtt-broker localhost --kafka-broker localhost:9092
-"""
-
 import argparse
 import json
 
@@ -36,21 +17,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def extract_well_name(mqtt_topic: str) -> str:
-    # "facies/welllog/CROSS H CATTLE" -> "CROSS H CATTLE"
-    # split with maxsplit=2 so well names containing "/" (none in this
-    # dataset, but defensive anyway) are not accidentally truncated.
     return mqtt_topic.split("/", 2)[2]
 
 
 def build_kafka_producer(kafka_broker: str) -> KafkaProducer:
     return KafkaProducer(
         bootstrap_servers=kafka_broker,
-        # Explicit api_version skips kafka-python's automatic broker
-        # version probing, which is known to crash against newer Kafka
-        # brokers (see github.com/dpkp/kafka-python/issues/2450).
         api_version=(2, 8, 1),
-        # Messages are already JSON strings coming from the replayer;
-        # encode them to bytes for Kafka, and encode the key separately.
         value_serializer=lambda v: v.encode("utf-8"),
         key_serializer=lambda k: k.encode("utf-8"),
     )

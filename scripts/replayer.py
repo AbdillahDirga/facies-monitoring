@@ -1,21 +1,3 @@
-"""
-Well log data replayer.
-
-Reads the facies CSV dataset and publishes each row to an MQTT topic,
-simulating a real-time stream of well log measurements ordered by depth.
-
-Each well runs in its own thread and publishes to its own topic:
-    facies/welllog/<WELL_NAME>
-
-Progress is checkpointed per well, so the replayer can be stopped and
-resumed later without starting over from the beginning.
-
-Usage:
-    python replayer.py --data ../data/raw/facies_vectors.csv
-    python replayer.py --data ../data/raw/facies_vectors.csv --interval 0.5
-    python replayer.py --reset   # clear all checkpoints and start over
-"""
-
 import argparse
 import json
 import os

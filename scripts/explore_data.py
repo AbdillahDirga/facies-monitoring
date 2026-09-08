@@ -1,12 +1,3 @@
-"""
-Data exploration script for the well log facies dataset.
-Run this before building the MQTT replayer to understand the dataset's
-structure, size, and data quality issues.
-
-Usage:
-    python explore_data.py --data ../data/raw/facies_vectors.csv
-"""
-
 import argparse
 
 import pandas as pd

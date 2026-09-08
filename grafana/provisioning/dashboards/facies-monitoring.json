@@ -1,0 +1,96 @@
+{
+  "id": null,
+  "uid": "facies-monitoring",
+  "title": "Facies Monitoring",
+  "tags": ["facies", "welllog"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "well",
+        "type": "query",
+        "label": "Well",
+        "datasource": { "type": "influxdb", "uid": "influxdb-facies" },
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"facies-bucket\", tag: \"Well Name\")",
+        "refresh": 2,
+        "sort": 1,
+        "multi": false,
+        "includeAll": false,
+        "current": {}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Log Curves - ${well}",
+      "type": "timeseries",
+      "datasource": { "type": "influxdb", "uid": "influxdb-facies" },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "pointSize": 3,
+            "showPoints": "auto",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"facies-bucket\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"welllog\")\n  |> filter(fn: (r) => r[\"Well Name\"] == \"${well}\")\n  |> filter(fn: (r) => r._field == \"GR\" or r._field == \"ILD_log10\" or r._field == \"DeltaPHI\" or r._field == \"PHIND\" or r._field == \"PE\" or r._field == \"RELPOS\")\n  |> drop(columns: [\"host\", \"Formation\", \"Well Name\"])"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Current Depth (ft)",
+      "type": "stat",
+      "datasource": { "type": "influxdb", "uid": "influxdb-facies" },
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 12 },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"facies-bucket\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"welllog\")\n  |> filter(fn: (r) => r[\"Well Name\"] == \"${well}\")\n  |> filter(fn: (r) => r._field == \"Depth\")\n  |> drop(columns: [\"host\", \"Formation\", \"Well Name\"])\n  |> last()"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Current Facies Code",
+      "type": "stat",
+      "datasource": { "type": "influxdb", "uid": "influxdb-facies" },
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 12 },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"facies-bucket\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"welllog\")\n  |> filter(fn: (r) => r[\"Well Name\"] == \"${well}\")\n  |> filter(fn: (r) => r._field == \"Facies\")\n  |> drop(columns: [\"host\", \"Formation\", \"Well Name\"])\n  |> last()"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Current Gamma Ray (GR)",
+      "type": "stat",
+      "datasource": { "type": "influxdb", "uid": "influxdb-facies" },
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 12 },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"facies-bucket\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"welllog\")\n  |> filter(fn: (r) => r[\"Well Name\"] == \"${well}\")\n  |> filter(fn: (r) => r._field == \"GR\")\n  |> drop(columns: [\"host\", \"Formation\", \"Well Name\"])\n  |> last()"
+        }
+      ]
+    }
+  ]
+}
