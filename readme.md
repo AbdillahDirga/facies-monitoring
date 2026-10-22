@@ -63,8 +63,8 @@ measurements as the well's data replays:
 
 | Curve       | Meaning                                                              |
 |-------------|--------------------------------------------------------------------------|
-| GR          | Gamma Ray — natural radioactivity of the rock                            |
-| ILD_log10   | Resistivity (log10 scale) — how well the rock resists electric current    |
+| GR          | Gamma Ray, natural radioactivity of the rock                            |
+| ILD_log10   | Resistivity (log10 scale), how well the rock resists electric current    |
 | DeltaPHI    | Porosity index (neutron-density porosity difference)                      |
 | PHIND       | Average neutron-density porosity                                          |
 | PE          | Photoelectric effect — helps distinguish rock/mineral type. ~22% of rows have no PE reading, shown as gaps in the line |
@@ -205,7 +205,7 @@ second per row, per well).
 **6. Open the dashboard:**
 
 Go to **http://localhost:3000**, log in with the credentials from `.env`.
-The "Facies Monitoring" dashboard is auto-provisioned — pick one, several,
+The "Facies Monitoring" dashboard is auto-provisioned, pick one, several,
 or all wells from the **Well** dropdown.
 
 ### Verifying each stage independently
@@ -235,7 +235,7 @@ Then repeat steps 3–5 above.
 
 ## Limitations & Future Work
 
-- Timestamps reflect replay/ingestion time, not original logging time —
+- Timestamps reflect replay/ingestion time, not original logging time,
   this dataset has no time axis of its own, only depth.
 - Kafka and Mosquitto run as single-node/single-broker setups; not
   configured for production-grade durability or clustering.
