@@ -104,17 +104,17 @@ selected, each panel shows one value per well for side-by-side comparison.
   significantly fewer rows (80) than the other 9 wells.
 - **Missing `PE` values (~22% of rows)** are sent as `null` rather than
   dropped, preserving the real sensor-gap condition of the source data.
-- **MQTT: one topic per well** (`facies/welllog/<WELL_NAME>`) — a
+- **MQTT: one topic per well** (`facies/welllog/<WELL_NAME>`): a
   lightweight, granular pub/sub pattern suited to IoT-style ingestion.
 - **Kafka: a single topic** (`facies-welllog`) with the well name as the
   message key, letting Kafka auto-partition by well. This better reflects
-  Kafka best practice — topics carry more overhead than MQTT topics, and
+  Kafka best practice, topics carry more overhead than MQTT topics, and
   partitions are the preferred way to parallelize within one topic.
 - **Parallel replay**: all 10 wells replay simultaneously, each in its own
   thread, ordered by ascending depth. Each well checkpoints its own
   progress independently, so replay can be stopped and resumed without
   starting over.
-- **Single-broker Kafka gotcha**: required
+- **Single-broker Kafka**: required
   `offsets.topic.replication.factor=1`, since the internal
   `__consumer_offsets` topic defaults to a replication factor of 3, which
   fails silently with only one broker.
